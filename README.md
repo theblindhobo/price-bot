@@ -1,4 +1,4 @@
-# Price-Discord-Bot for Ethereum Tokens
+# Discord Price-Bot for Ethereum Tokens
 A discord bot which could be added to your server for price information about a specified token.
 
 # Usage
