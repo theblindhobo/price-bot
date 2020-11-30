@@ -3,6 +3,8 @@ using Discord;
 using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PriceBot
@@ -95,8 +97,17 @@ namespace PriceBot
             {
                 var weth = client.GetWethPrice();
                 var usdc = client.GetUsdcPrice();
-                State.Client.Rest.CurrentUser.ModifyAsync(b => { b.Username = $"{State.Options.Name} ${usdc.Price}"; });
-                State.Client.SetGameAsync($"ETH {weth.Price}").GetAwaiter().GetResult();
+                var usdcPrice = (double.TryParse(usdc.Price, NumberStyles.Any, CultureInfo.InvariantCulture, out var parsedUsdcValue) ? Math.Round(parsedUsdcValue, 2) : double.NaN).ToString(CultureInfo.InvariantCulture);
+                var wethPrice = (double.TryParse(weth.Price, NumberStyles.Any, CultureInfo.InvariantCulture, out var parsedWethValue) ? Math.Round(parsedWethValue, 12) : double.NaN).ToString(CultureInfo.InvariantCulture);
+
+                foreach (var guild in State.Client.Guilds)
+                {
+                    var user = guild.GetUser(State.Client.CurrentUser.Id);
+                    user.ModifyAsync(x => { x.Nickname = $"{State.Options.Name} ${usdcPrice}"; }).GetAwaiter().GetResult();
+                }
+
+                //State.Client?.Rest?.CurrentUser?.ModifyAsync(b => b.Username = $"{State.Options.Name} ${(double.TryParse(usdc.Price, NumberStyles.Any, CultureInfo.InvariantCulture, out var value) ? Math.Round(value, 2) : double.NaN)}");
+                State.Client.SetGameAsync($"ETH {wethPrice}").GetAwaiter().GetResult();
             }, TimeSpan.FromMinutes(1));
         }
 
