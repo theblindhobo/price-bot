@@ -12,7 +12,7 @@ A discord bot which could be added to your server for price information about a 
 ```
 dotnet run -d "<your discord bot token here>" -n "<your eth-token name here>" -t "<your eth-token address here" -a "<your buyAmount here>"
 
--d - Go to https://discord.com/developers/applications --> Select your bot --> Copy your token 58-char-token
+-d - Go to https://discord.com/developers/applications --> Select your bot --> Copy your 58-char-token
 
 -n - Set the name of the bot
 
